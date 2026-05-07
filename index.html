@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMIMC | Strategic Pitch Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FAFAF9; color: #292524; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(231, 229, 228, 0.5); }
+        .accordion-content { transition: max-height 0.3s ease-out, padding 0.3s ease; max-height: 0; overflow: hidden; padding: 0 1.5rem; }
+        .accordion-content.active { max-height: 500px; padding: 1rem 1.5rem; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 40vh; max-height: 400px; min-height: 300px; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            600: '#0d9488',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            800: '#292524',
+                            900: '#1c1917',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
+
+<!-- Chosen Palette: Warm Neutral & Medical Teal (Stone backgrounds #FAFAF9, Teal/Brand accents #0d9488, Dark text #292524) -->
+
+<!-- Application Structure Plan: The SPA is structured as a non-linear "Interactive Pitch Dashboard". It prioritizes a narrative flow: moving from the high-level Vision, to understanding the Target Ecosystem (interactive chart), outlining the Strategic Goals, mapping the Execution Timeline (interactive Gantt chart), and finally providing actionable Pre-Pitch Interview Questions. This dashboard format allows users to either present the data seamlessly to KOLs or use it internally to synthesize the complex, multi-faceted goals of the consortium into digestible, interactive modules. -->
+
+<!-- Visualization & Content Choices: 
+1. Ecosystem Chart (Doughnut): Goal -> Show the diverse groups involved. Viz -> Chart.js Doughnut. Interaction -> Clicking segments reveals detailed text descriptions of that specific audience. Justification -> Replaces a static list with an exploratory element, proving NO SVG requirement.
+2. Timeline (Floating Bar): Goal -> Illustrate the 9-month launch phases. Viz -> Chart.js Horizontal Bar with floating values [start, end]. Interaction -> Hover tooltips. Justification -> Visually maps time without relying on SVG/Mermaid flowcharts.
+3. Accordion Interview Guide: Goal -> Organize prep questions cleanly. Viz -> HTML/CSS dynamic accordion. Interaction -> Click to expand/collapse. Justification -> Manages dense text efficiently. 
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<nav class="fixed top-0 w-full glass-panel z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex-shrink-0 flex items-center font-bold text-xl tracking-tight text-brand-900">
+                <span class="text-2xl mr-2">&#9784;</span> TMIMC Dashboard
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#vision" class="text-stone-600 hover:text-brand-600 px-3 py-2 text-sm font-medium transition-colors">Vision</a>
+                <a href="#ecosystem" class="text-stone-600 hover:text-brand-600 px-3 py-2 text-sm font-medium transition-colors">Ecosystem</a>
+                <a href="#goals" class="text-stone-600 hover:text-brand-600 px-3 py-2 text-sm font-medium transition-colors">Goals & Values</a>
+                <a href="#timeline" class="text-stone-600 hover:text-brand-600 px-3 py-2 text-sm font-medium transition-colors">Timeline</a>
+                <a href="#guide" class="text-stone-600 hover:text-brand-600 px-3 py-2 text-sm font-medium transition-colors">Interview Guide</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-24 pb-16">
+    <section id="vision" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 mb-6 leading-tight">
+                Bridging Excellence, <br><span class="text-brand-600">Empowering the Future of Thai Healthcare.</span>
+            </h1>
+            <p class="text-xl text-stone-600 mb-8 leading-relaxed">
+                The Thai Medical Innovation & Mentorship Consortium (TMIMC) is a collaborative community for Clinical Leaders, Innovators, and Healthcare Professionals. Our core philosophy is progress through open dialogue, mentorship, and localized collaboration.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#ecosystem" class="bg-brand-600 hover:bg-brand-800 text-white font-semibold py-3 px-8 rounded-full transition-all shadow-md hover:shadow-lg">Explore the Model</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-stone-200 mb-20"></div>
+
+    <section id="ecosystem" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold text-stone-900 mb-4">&#127760; The Consortium Ecosystem</h2>
+            <p class="text-lg text-stone-600 max-w-3xl">
+                This section illustrates the diverse groups that make up the TMIMC. The goal is to break down traditional silos. <strong>Interact with the chart below</strong> by clicking on different segments to understand the crucial role each group plays in our unified healthcare vision.
+            </p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-center gap-12 glass-panel p-8 rounded-2xl shadow-sm">
+            <div class="w-full lg:w-1/2">
+                <div class="chart-container">
+                    <canvas id="ecosystemChart"></canvas>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2">
+                <div id="ecosystemDetail" class="bg-white p-8 rounded-xl shadow-inner border border-stone-100 h-full flex flex-col justify-center min-h-[300px]">
+                    <h3 class="text-2xl font-bold text-brand-800 mb-3" id="ecoTitle">Select a Segment</h3>
+                    <p class="text-stone-600 text-lg leading-relaxed" id="ecoDesc">Click on any slice of the doughnut chart to explore the specific target audience and their intended role within the TMIMC community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="goals" class="bg-stone-100 py-24 mb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">&#128161; Core Goals & The KOL Advantage</h2>
+                <p class="text-lg text-stone-600 max-w-3xl mx-auto">
+                    Outlining the primary objectives of the consortium alongside the strategic benefits for our founding panelists. This structural breakdown helps align our mission with the legacy aspirations of senior surgeons.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-stone-200">
+                    <div class="text-3xl mb-4 text-brand-600">&#128104;&#8205;&#9877;&#65039;</div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">Mentorship & Guidance</h3>
+                    <p class="text-stone-600">An open door for aspiring doctors (students, residents, fellows) to seek career, life advice, and accessible education across all levels.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-stone-200">
+                    <div class="text-3xl mb-4 text-brand-600">&#129309;</div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">Unified Healthcare</h3>
+                    <p class="text-stone-600">Breaking down silos. Fostering open, humanized discussions between doctors, nurses, and hospital operators.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-stone-200">
+                    <div class="text-3xl mb-4 text-brand-600">&#128227;</div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">Systemic Advocacy</h3>
+                    <p class="text-stone-600">A constructive forum to discuss healthcare reforms, reimbursement challenges, and supply chain issues with a unified voice.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-stone-200">
+                    <div class="text-3xl mb-4 text-brand-600">&#129504;</div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">Clinical Think-Tank</h3>
+                    <p class="text-stone-600">Connecting top medical minds for collaborative research through exclusive quarterly panel dinners.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-stone-200">
+                    <div class="text-3xl mb-4 text-brand-600">&#127981;</div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">Championing 'MIT'</h3>
+                    <p class="text-stone-600">An alliance supporting Thai startups and manufacturers in collaboration with NSTDA / Made in Thailand policies.</p>
+                </div>
+                <div class="bg-brand-50 p-8 rounded-2xl shadow-sm border border-brand-200 flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-brand-900 mb-4">Why Join as a Founding Panelist?</h3>
+                    <ul class="space-y-2 text-brand-800 text-sm font-medium">
+                        <li>&#10003; Shape the Future of aspiring doctors</li>
+                        <li>&#10003; Amplify Your Voice to policymakers</li>
+                        <li>&#10003; Exclusive R&D Access to MIT health-tech</li>
+                        <li>&#10003; Humanize Your Brand in the community</li>
+                        <li>&#10003; Zero Administrative Burden (We handle logistics)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold text-stone-900 mb-4">&#128197; Execution Timeline & Projects</h2>
+            <p class="text-lg text-stone-600 max-w-3xl">
+                This timeline visualizes our 9-month launch strategy. Hover over the bars in the chart to see specific activities scheduled for each phase, bridging the gap between planning and active community engagement.
+            </p>
+        </div>
+
+        <div class="glass-panel p-8 rounded-2xl shadow-sm w-full">
+            <div class="chart-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <div class="border-l-4 border-brand-600 pl-4 py-2">
+                <h4 class="font-bold text-stone-900">Panel Meetings</h4>
+                <p class="text-sm text-stone-500">Exclusive quarterly dinners for KOLs.</p>
+            </div>
+            <div class="border-l-4 border-brand-600 pl-4 py-2">
+                <h4 class="font-bold text-stone-900">Online Community</h4>
+                <p class="text-sm text-stone-500">AMA sessions, case discussions & advice.</p>
+            </div>
+            <div class="border-l-4 border-brand-600 pl-4 py-2">
+                <h4 class="font-bold text-stone-900">Newsletters</h4>
+                <p class="text-sm text-stone-500">Monthly policy shifts & tech spotlights.</p>
+            </div>
+            <div class="border-l-4 border-brand-600 pl-4 py-2">
+                <h4 class="font-bold text-stone-900">Offline Events</h4>
+                <p class="text-sm text-stone-500">Bi-annual 'Innovation Mixers'.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="guide" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-stone-900 mb-4">&#128172; Strategic Interview Guide</h2>
+            <p class="text-lg text-stone-600">
+                Use these structured questions during 1-on-1 meetings or intimate dinners to gain KOL buy-in before presenting the full deck. The objective is to establish them as co-founders of the vision. Click to expand topics.
+            </p>
+        </div>
+
+        <div class="space-y-4" id="accordionContainer">
+        </div>
+    </section>
+</main>
+
+<footer class="bg-stone-900 text-stone-400 py-12 text-center">
+    <div class="max-w-7xl mx-auto px-4">
+        <p class="mb-4">&#9784; TMIMC Strategic Presentation Tool</p>
+        <p class="text-sm">Confidential and proprietary information. Not for public distribution.</p>
+    </div>
+</footer>
+
+<script>
+    const ecoData = {
+        labels: ['The Mentors (KOLs)', 'The Future', 'The Backbone', 'The Innovators', 'The Facilitators'],
+        descriptions: [
+            "Senior KOLs, Department Heads, and pioneering surgeons. They provide guidance, clinical reality checks, and lead the systemic advocacy efforts.",
+            "Medical students, residents, fellows, and young staff. They are the primary beneficiaries of the mentorship program and educational platform.",
+            "Nurses, allied health professionals, and hospital administrators. Including them ensures the flattening of traditional hierarchies and promotes unified healthcare.",
+            "Thai medical device manufacturers, health-tech startups, and engineers. They collaborate directly with clinical minds to build 'Made in Thailand' solutions.",
+            "Policymakers, NSTDA representatives, and investors. They provide the necessary framework, funding, and regulatory support to scale innovations."
+        ],
+        colors: ['#0d9488', '#115e59', '#14b8a6', '#0f766e', '#5eead4']
+    };
+
+    const ecoCtx = document.getElementById('ecosystemChart').getContext('2d');
+    const ecosystemChart = new Chart(ecoCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ecoData.labels,
+            datasets: [{
+                data: [20, 20, 20, 20, 20],
+                backgroundColor: ecoData.colors,
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right', labels: { font: { family: 'Segoe UI', size: 14 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) { return " Click to view details"; }
+                    }
+                }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const index = elements[0].index;
+                    document.getElementById('ecoTitle').innerText = ecoData.labels[index];
+                    document.getElementById('ecoDesc').innerText = ecoData.descriptions[index];
+                    
+                    document.getElementById('ecosystemDetail').classList.add('opacity-50');
+                    setTimeout(() => {
+                        document.getElementById('ecosystemDetail').classList.remove('opacity-50');
+                        document.getElementById('ecosystemDetail').style.transition = 'opacity 0.3s';
+                    }, 50);
+                }
+            }
+        }
+    });
+
+    const timeCtx = document.getElementById('timelineChart').getContext('2d');
+    new Chart(timeCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                'Phase 1: Foundation', 
+                'Phase 2: Platform Launch', 
+                'Phase 3: Broadening Horizon', 
+                'Phase 4: Innovation Summit'
+            ],
+            datasets: [{
+                label: 'Timeline (Months)',
+                data: [
+                    [0, 2],
+                    [2, 4],
+                    [4, 6],
+                    [6, 9]
+                ],
+                backgroundColor: '#0d9488',
+                borderRadius: 8,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    min: 0,
+                    max: 10,
+                    title: { display: true, text: 'Months from Kickoff', font: { weight: 'bold' } },
+                    grid: { color: '#e7e5e4' }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Segoe UI', size: 14, weight: 'bold' } }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const phase = context.dataIndex;
+                            const tooltips = [
+                                "Months 1-2: 1-on-1 consultations with Top 40 KOLs, Form Advisory Board.",
+                                "Months 3-4: Launch online community, host first 'Ask an Ajarn' session.",
+                                "Months 5-6: Invite nurses/staff, publish first policy/reimbursement newsletter.",
+                                "Months 7-9: First live Think-Tank event connecting KOLs, Mfgs, and NSTDA."
+                            ];
+                            let text = tooltips[phase];
+                            let words = text.split(' ');
+                            let lines = [];
+                            let currentLine = '';
+                            for (let i = 0; i < words.length; i++) {
+                                if (currentLine.length + words[i].length > 40) {
+                                    lines.push(currentLine.trim());
+                                    currentLine = '';
+                                }
+                                currentLine += words[i] + ' ';
+                            }
+                            lines.push(currentLine.trim());
+                            return lines;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const interviewData = [
+        {
+            title: "Topic 1: The Panelist Value Proposition",
+            q1: { q: "Legacy & Mentorship", a: "Ajarn, you’ve reached the pinnacle of orthopedic surgery in Thailand. Aside from clinical work, what kind of legacy do you want to leave for the next generation of medical students and young staff, and how can we build a platform to help you achieve that?" },
+            q2: { q: "Networking & Influence", a: "As a think-tank, we plan to connect top clinicians directly with policymakers (like NSTDA) and domestic manufacturers. How would having a unified 'KOL Consortium' benefit your current research projects or clinical frustrations?" },
+            q3: { q: "Time & Engagement", a: "We know your time is your most valuable asset. What format of engagement (e.g., quarterly offline dinners, short video Q&As, podcast interviews) would be most enjoyable and least burdensome for you?" }
+        },
+        {
+            title: "Topic 2: Navigating Social Issues & Reforms",
+            q1: { q: "Setting the Tone", a: "Healthcare reform, government reimbursement, and public welfare are sensitive topics. How can we structure these discussions so they remain constructive and solution-oriented, rather than just complaints against the system?" },
+            q2: { q: "Flattening the Hierarchy", a: "One of our goals is to humanize doctors and encourage open dialogue with nurses and hospital operators. What is the most respectful way to break down traditional hospital hierarchy in this community so everyone feels comfortable speaking up?" }
+        },
+        {
+            title: "Topic 3: Addressing Stagnation in Medical Innovation",
+            q1: { q: "Identifying Roadblocks", a: "In your experience working with both imported premium devices and local alternatives, what is the single biggest roadblock preventing Thai medical innovation from succeeding in our own hospitals?" },
+            q2: { q: "Bridging the Gap", a: "There seems to be a disconnect between what Thai engineers/startups are building and what surgeons actually need. How can this panel best serve as the 'clinical reality check' for MIT (Made in Thailand) projects and NSTDA funding?" }
+        }
+    ];
+
+    const accordionContainer = document.getElementById('accordionContainer');
+    
+    interviewData.forEach((topic, index) => {
+        const item = document.createElement('div');
+        item.className = 'glass-panel rounded-xl overflow-hidden';
+        
+        let questionsHTML = '';
+        Object.keys(topic).forEach(key => {
+            if (key !== 'title') {
+                questionsHTML += `
+                    <div class="mb-4 pb-4 border-b border-stone-200 last:border-0 last:mb-0 last:pb-0">
+                        <h4 class="font-bold text-brand-800 mb-1">${topic[key].q}</h4>
+                        <p class="text-stone-700 italic">"${topic[key].a}"</p>
+                    </div>
+                `;
+            }
+        });
+
+        item.innerHTML = `
+            <button class="w-full text-left px-6 py-4 font-bold text-lg text-stone-900 bg-white hover:bg-stone-50 transition-colors flex justify-between items-center focus:outline-none" onclick="toggleAccordion(${index})">
+                <span>${topic.title}</span>
+                <span class="text-brand-600 text-2xl transform transition-transform duration-300" id="icon-${index}">+</span>
+            </button>
+            <div class="accordion-content bg-stone-50" id="content-${index}">
+                ${questionsHTML}
+            </div>
+        `;
+        accordionContainer.appendChild(item);
+    });
+
+    function toggleAccordion(index) {
+        const content = document.getElementById(`content-${index}`);
+        const icon = document.getElementById(`icon-${index}`);
+        
+        const allContents = document.querySelectorAll('.accordion-content');
+        const allIcons = document.querySelectorAll('button span:last-child');
+        
+        allContents.forEach((el, i) => {
+            if (i !== index) {
+                el.classList.remove('active');
+                allIcons[i].innerText = '+';
+                allIcons[i].style.transform = 'rotate(0deg)';
+            }
+        });
+
+        content.classList.toggle('active');
+        if (content.classList.contains('active')) {
+            icon.innerText = '-';
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            icon.innerText = '+';
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
+</script>
+</body>
+</html>
